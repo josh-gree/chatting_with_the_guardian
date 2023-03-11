@@ -16,6 +16,7 @@ sqlalchemy = "^2.0.5.post1"
 alembic = "^1.10.2"
 pytest = "^7.2.2"
 ipython = "^8.11.0"
+black = "^23.1.0"
 
 [build-system]
 requires = ["poetry-core"]
