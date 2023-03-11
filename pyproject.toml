@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "chatting-with-the-guardian"
+version = "0.1.0"
+description = ""
+authors = ["josh-gree <joshuadouglasgreenhalgh@gmail.com>"]
+readme = "README.md"
+packages = [{include = "chatting_with_the_guardian"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+psycopg2-binary = "^2.9.5"
+sqlalchemy = "^2.0.5.post1"
+
+
+[tool.poetry.group.dev.dependencies]
+alembic = "^1.10.2"
+pytest = "^7.2.2"
+ipython = "^8.11.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
