@@ -29,3 +29,6 @@ jobs:
     - name: Test with pytest
       run: |
         poetry run pytest
+    - name: Run Migrations
+      run: |
+        PROD=TRUE DATABASE_URL=${{ secrets.DATABASE_URL }} poetry run alembic upgrade head
