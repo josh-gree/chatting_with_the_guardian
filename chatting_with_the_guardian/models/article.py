@@ -102,8 +102,3 @@ class ArticleParagraph(Base):
             "paragraph_text", "order", name="uq_article_paragraphs_text_order"
         ),
     )
-
-
-class Foo(Base):
-    __tablename__ = "foos"
-    id = Column(Integer, primary_key=True, autoincrement=True)
