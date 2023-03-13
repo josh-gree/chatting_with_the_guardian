@@ -1,4 +1,3 @@
-import time
 import pytest
 import docker
 
@@ -38,7 +37,7 @@ def postgres_container():
         try:
             engine.connect()
             break
-        except Exception as err:
+        except Exception:
             pass
     # Return connection string
     yield connection_string

@@ -27,17 +27,17 @@ def test_is_article_url():
     # Test for a valid article URL with a date
     href = "https://www.theguardian.com/world/2023/mar/11/ukraine-crisis-russia-troops-border-zelenskiy"
     root_url = "https://www.theguardian.com"
-    assert is_article_url(href, root_url) == True
+    assert is_article_url(href, root_url) is True
 
     # Test for an article URL without a date
     href = "https://www.theguardian.com/world/ukraine-crisis-russia-troops-border-zelenskiy"
     root_url = "https://www.theguardian.com"
-    assert is_article_url(href, root_url) == False
+    assert is_article_url(href, root_url) is False
 
     # Test for a URL from a different domain
     href = "https://www.example.com/article/2023/mar/11/test-article"
     root_url = "https://www.theguardian.com"
-    assert is_article_url(href, root_url) == False
+    assert is_article_url(href, root_url) is False
 
 
 class MockResponse:
@@ -63,7 +63,7 @@ def test_get_front_page(mocker):
     # Test that each URL is a valid article URL
     root_url = "https://www.theguardian.com"
     for url in article_urls:
-        assert is_article_url(url, root_url) == True
+        assert is_article_url(url, root_url) is True
 
 
 def test_get_article_text(mocker):
