@@ -20,3 +20,5 @@ jobs:
         poetry install --with dev
     - run: |
         python -m chatting_with_the_guardian.ingestion.main
+      env:
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}

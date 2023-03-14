@@ -65,6 +65,7 @@ class Article(Base):
                 cls.slug == parsed_url["slug"],
                 cls.date == parsed_url["date"],
             )
+            .order_by(cls.created_at.desc())
             .first()
         ):
             if existing_article.hash == hash:

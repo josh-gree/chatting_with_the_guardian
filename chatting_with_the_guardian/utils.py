@@ -45,19 +45,20 @@ def get_front_page() -> dict:
         for article in soup.find_all("a", href=True)
         if is_article_url(article.attrs["href"], ROOT_URL)
     ]
-
     return article_urls
 
 
 def get_article_text(url: str) -> str:
     resp = requests.get(url)
     soup = bs4.BeautifulSoup(resp.content)
-
-    ps = [
-        p.text
-        for p in soup.find("div", {"id": "maincontent"}).div.find_all(
-            "p", recursive=False
-        )
-    ]
+    try:
+        ps = [
+            p.text
+            for p in soup.find("div", {"id": "maincontent"}).div.find_all(
+                "p", recursive=False
+            )
+        ]
+    except AttributeError:
+        return "No Text"
 
     return "\n".join(ps)
