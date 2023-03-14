@@ -31,14 +31,14 @@ def install_dependencies(ctx):
 
 @task
 def lint(ctx):
-    ctx.run("poetry run ruff check .")
+    ctx.run("ruff check .")
 
 
 @task
 def test(ctx):
-    ctx.run("poetry run pytest")
+    ctx.run("pytest")
 
 
 @task
 def run_migrations(ctx, prod, database_url):
-    ctx.run(f"PROD={prod} DATABASE_URL={database_url} poetry run alembic upgrade head")
+    ctx.run(f"PROD={prod} DATABASE_URL={database_url} alembic upgrade head")
