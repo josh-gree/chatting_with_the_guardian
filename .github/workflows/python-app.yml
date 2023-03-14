@@ -28,4 +28,4 @@ jobs:
     - run: |
         poetry run invoke test
     - run: |
-        poetry run invoke run_migrations --prod=TRUE --database-url=${{ secrets.DATABASE_URL }}
+        poetry run invoke run-migrations --prod=TRUE --database-url=${{ secrets.DATABASE_URL }}
