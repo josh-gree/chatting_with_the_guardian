@@ -757,6 +757,20 @@ files = [
 ptyprocess = ">=0.5"
 
 [[package]]
+name = "pgvector"
+version = "0.1.6"
+description = "pgvector support for Python"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "pgvector-0.1.6-py2.py3-none-any.whl", hash = "sha256:c53d49dae7c5e0e39bc2f05ce8599a853383f11ce9ffaa7bd0924844e16c7bf4"},
+]
+
+[package.dependencies]
+numpy = "*"
+
+[[package]]
 name = "pickleshare"
 version = "0.7.5"
 description = "Tiny 'shelve'-like database with concurrency support"
@@ -1291,4 +1305,4 @@ test = ["websockets"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "736d00407ab295db54f9ad3e0e959e3e6d112a74f0571774b2ce33c06ffdc866"
+content-hash = "fde3f068c9159525176ff51ee9d5dc8873c472e0c02a3270921da1433fd5244d"
