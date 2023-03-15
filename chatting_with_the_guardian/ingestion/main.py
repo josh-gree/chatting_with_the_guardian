@@ -17,32 +17,34 @@ def main():
             continue
         # Create a new article - TODO: this returning two values is a bit of a mess!!
 
-        article, existing_article = Article.try_create(
+        existing_article, new_article = Article.try_create(
             article_url, article_text, session
         )
 
-        if article and (not existing_article):
+        if existing_article and new_article is None:
             print(f"Article already exists: {existing_article}")
-        if existing_article and (not article):
-            print(f"Created new article: {article}")
-            session.add(article)
-            session.commit()
 
-            paragraphs = ArticleParagraph.add_article_paragraphs(
-                article_text, article, session
-            )
-
-            session.add_all(paragraphs)
-            session.commit()
-        if article and existing_article:
+        elif existing_article and new_article:
             print(f"Article already exists: {existing_article}")
-            print(f"Updated article: {article}")
-            session.add(article)
+            print(f"Updated article: {new_article}")
+            session.add(new_article)
             session.add(existing_article)
             session.commit()
 
             paragraphs = ArticleParagraph.add_article_paragraphs(
-                article_text, article, session
+                article_text, new_article, session
+            )
+
+            session.add_all(paragraphs)
+            session.commit()
+
+        elif new_article and existing_article is None:
+            print(f"Created new article: {new_article}")
+            session.add(new_article)
+            session.commit()
+
+            paragraphs = ArticleParagraph.add_article_paragraphs(
+                article_text, new_article, session
             )
 
             session.add_all(paragraphs)
