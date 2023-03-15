@@ -1,5 +1,5 @@
 import hashlib
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple
 from pgvector.sqlalchemy import Vector
 
 from datetime import datetime
@@ -102,6 +102,23 @@ class ArticleParagraph(Base):
 
     __table_args__ = (
         UniqueConstraint(
-            "paragraph_text", "order", name="uq_article_paragraphs_text_order"
+            "paragraph_text",
+            "order",
+            "article_id",
+            name="uq_article_paragraphs_text_order",
         ),
     )
+
+    @classmethod
+    def add_article_paragraphs(
+        cls, article_text: str, article: Article, session
+    ) -> List["ArticleParagraph"]:
+        paragraphs = []
+        for ind, p in enumerate(article_text.split("\n")):
+            if p:
+                paragraph = ArticleParagraph(
+                    article_id=article.id, paragraph_text=p, order=ind
+                )
+                paragraphs.append(paragraph)
+
+        return paragraphs
