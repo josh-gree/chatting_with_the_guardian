@@ -1,5 +1,6 @@
 import hashlib
 from typing import Optional, Tuple
+from pgvector.sqlalchemy import Vector
 
 from datetime import datetime
 from sqlalchemy import (
@@ -29,6 +30,7 @@ class Article(Base):
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
     valid_to = Column(DateTime, nullable=True)
     paragraphs = relationship("ArticleParagraph", back_populates="article")
+    embedding = Column(Vector(1536))
 
     __table_args__ = (
         CheckConstraint(
