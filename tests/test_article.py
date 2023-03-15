@@ -127,7 +127,7 @@ def test_try_create_different_text(db_session):
 
     assert article_first.valid_to is None
 
-    new_version_of_article, existing_article = Article.try_create(
+    existing_article, new_version_of_article = Article.try_create(
         url="https://www.theguardian.com/media/2023/mar/11/lineker-row-theatens-topple-bbc-chiefs-and-hit-tory-asylum-plans",
         text="some other text",
         session=db_session,
