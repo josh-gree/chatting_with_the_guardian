@@ -4,6 +4,7 @@ import docker
 from datetime import date, timedelta
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.sql import text
 
 from alembic.config import Config
 from alembic import command
@@ -16,7 +17,7 @@ def postgres_container():
     # Start Postgres container
     client = docker.from_env()
     container = client.containers.run(
-        "postgres:latest",
+        "ankane/pgvector",
         detach=True,
         environment={"POSTGRES_PASSWORD": "password"},
         ports={"5432/tcp": 0},
@@ -39,6 +40,12 @@ def postgres_container():
             break
         except Exception:
             pass
+
+    # Activate pgvector extension
+    with engine.connect() as connection:
+        connection.execute(text("CREATE EXTENSION IF NOT EXISTS vector SCHEMA public;"))
+        connection.commit()
+
     # Return connection string
     yield connection_string
 
@@ -49,6 +56,7 @@ def postgres_container():
 @pytest.fixture(scope="module")
 def db_engine(postgres_container):
     engine = create_engine(postgres_container)
+
     alembic_cfg = Config()
     alembic_cfg.set_main_option("sqlalchemy.url", postgres_container)
     alembic_cfg.set_main_option("script_location", "migrations")

@@ -27,7 +27,7 @@ def clean(ctx):
 @task
 def local_pg_up(ctx):
     ctx.run(
-        "docker run --name pg -d -p 5432:5432 -e POSTGRES_PASSWORD=password postgres:latest"
+        "docker run --name pg -d -p 5432:5432 -e POSTGRES_PASSWORD=password ankane/pgvector"
     )
 
 
