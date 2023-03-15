@@ -80,7 +80,7 @@ class Article(Base):
                     hash=hash,
                     date=parsed_url["date"],
                 )
-                return new_version_of_article, existing_article
+                return existing_article, new_version_of_article
         else:
             new_article = Article(
                 category=parsed_url["category"],
