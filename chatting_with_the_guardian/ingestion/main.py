@@ -15,14 +15,15 @@ def main():
 
         if article_text is None:
             continue
-        # Create a new article
+        # Create a new article - TODO: this returning two values is a bit of a mess!!
+
         article, existing_article = Article.try_create(
             article_url, article_text, session
         )
 
-        if existing_article and (not article):
-            print(f"Article already exists: {existing_article}")
         if article and (not existing_article):
+            print(f"Article already exists: {existing_article}")
+        if existing_article and (not article):
             print(f"Created new article: {article}")
             session.add(article)
             session.commit()
