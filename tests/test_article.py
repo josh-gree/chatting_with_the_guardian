@@ -3,7 +3,6 @@ import docker
 
 from datetime import date, datetime, timedelta
 from sqlalchemy import create_engine
-import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import text
 
