@@ -50,7 +50,7 @@ def get_front_page() -> dict:
 
 def get_article_text(url: str) -> str:
     resp = requests.get(url)
-    soup = bs4.BeautifulSoup(resp.content)
+    soup = bs4.BeautifulSoup(resp.content, features="html.parser")
     try:
         ps = [
             p.text
@@ -59,6 +59,6 @@ def get_article_text(url: str) -> str:
             )
         ]
     except AttributeError:
-        return "No Text"
+        return None
 
     return "\n".join(ps)

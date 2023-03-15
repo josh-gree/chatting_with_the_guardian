@@ -1,8 +1,9 @@
 import pytest
 import docker
 
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from sqlalchemy import create_engine
+import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import text
 
@@ -67,11 +68,16 @@ def db_engine(postgres_container):
 
 @pytest.fixture(scope="function")
 def db_session(db_engine):
-    Session = sessionmaker(bind=db_engine)
+    connection = db_engine.connect()
+    savepoint = connection.begin_nested()
+    Session = sessionmaker(bind=connection)
     session = Session()
+
     yield session
-    session.rollback()
+
     session.close()
+    savepoint.rollback()
+    connection.close()
 
 
 def test_create_article(db_session):
@@ -170,4 +176,32 @@ def test_paragraph_unique_constraint(db_session):
     )
     db_session.add(paragraph_dupe)
     with pytest.raises(Exception):
+        db_session.commit()
+
+
+def test_add_article_paragraphs(db_session):
+    # create a test article
+    article = Article(
+        category="test",
+        slug="test-article",
+        hash="abcdefg",
+        date=datetime.now().date(),
+    )
+
+    db_session.add(article)
+    db_session.commit()
+    # add some paragraphs
+    paragraphs = ArticleParagraph.add_article_paragraphs(
+        "This is some\ntext of the article", article, db_session
+    )
+
+    db_session.add_all(paragraphs)
+    db_session.commit()
+
+    assert db_session.query(ArticleParagraph).all() == paragraphs
+    assert len(db_session.query(ArticleParagraph).all()) == 2
+
+    with pytest.raises(Exception):
+        ap = ArticleParagraph(article=article, paragraph_text="This is some", order=0)
+        db_session.add(ap)
         db_session.commit()
