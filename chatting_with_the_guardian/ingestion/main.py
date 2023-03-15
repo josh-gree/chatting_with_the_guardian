@@ -16,7 +16,7 @@ def main():
         if article_text is None:
             continue
         # Create a new article
-        existing_article, article = Article.try_create(
+        article, existing_article = Article.try_create(
             article_url, article_text, session
         )
 
