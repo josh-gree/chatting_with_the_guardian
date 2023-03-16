@@ -1,8 +1,9 @@
 import pytest
 
+from functools import partial
 from datetime import date
 from chatting_with_the_guardian.utils import (
-    get_front_page,
+    get_page,
     is_article_url,
     parse_url,
     get_article_text,
@@ -56,6 +57,7 @@ def test_get_front_page(mocker):
         mocker.patch("requests.get", return_value=MockResponse(html))
 
     # Test that the front page returns a list of article URLs
+    get_front_page = partial(get_page, section="uk")
     article_urls = get_front_page()
     assert isinstance(article_urls, list)
     assert len(article_urls) > 0

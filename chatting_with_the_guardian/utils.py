@@ -36,8 +36,8 @@ def is_article_url(href: str, root_url: str) -> bool:
     return starts_with_root and has_date
 
 
-def get_front_page() -> dict:
-    resp = requests.get(ROOT_URL + "/uk")
+def get_page(section: str) -> dict:
+    resp = requests.get(ROOT_URL + f"/{section}")
     soup = bs4.BeautifulSoup(resp.content, features="html.parser")
 
     article_urls = [
