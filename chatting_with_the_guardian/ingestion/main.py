@@ -74,6 +74,16 @@ def main():
             elif existing_article and new_article:
                 print(f"Article already exists: {existing_article}")
                 print(f"Updated article: {new_article}")
+
+                if (
+                    session.query(Article)
+                    .filter(Article.hash == new_article.hash)
+                    .count()
+                    == 1
+                ):
+                    print("Article text has reverted to previous version.")
+                    continue
+
                 session.add(new_article)
                 session.add(existing_article)
                 session.commit()
