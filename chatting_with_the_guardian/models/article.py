@@ -30,7 +30,7 @@ class Article(Base):
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
     valid_to = Column(DateTime, nullable=True)
     paragraphs = relationship("ArticleParagraph", back_populates="article")
-    embedding = Column(Vector(1536))
+    summary = relationship("ArticleSummary", back_populates="article")
 
     __table_args__ = (
         CheckConstraint(
@@ -99,6 +99,7 @@ class ArticleParagraph(Base):
     paragraph_text = Column(String, nullable=False)
     order = Column(Integer, nullable=False)
     article = relationship("Article", back_populates="paragraphs")
+    embedding = Column(Vector(1536))
 
     __table_args__ = (
         UniqueConstraint(
@@ -122,3 +123,13 @@ class ArticleParagraph(Base):
                 paragraphs.append(paragraph)
 
         return paragraphs
+
+
+class ArticleSummary(Base):
+    __tablename__ = "article_summaries"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    article_id = Column(Integer, ForeignKey("articles.id"), nullable=False)
+    summary_text = Column(String, nullable=False)
+    article = relationship("Article", back_populates="summary")
+    embedding = Column(Vector(1536))
