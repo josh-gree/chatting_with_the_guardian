@@ -1,4 +1,5 @@
 import hashlib
+import spacy
 from typing import List, Optional, Tuple
 from pgvector.sqlalchemy import Vector
 
@@ -11,6 +12,7 @@ from sqlalchemy import (
     String,
     Date,
     DateTime,
+    Table,
     UniqueConstraint,
 )
 from sqlalchemy.orm import declarative_base, relationship
@@ -18,6 +20,16 @@ from sqlalchemy.orm import declarative_base, relationship
 from chatting_with_the_guardian.utils import parse_url
 
 Base = declarative_base()
+
+IGNORE = ["CARDINAL", "MONEY", "ORDINAL", "PERCENT", "QUANTITY", "TIME"]
+
+
+article_named_entity_association_table = Table(
+    "article_named_entity_association",
+    Base.metadata,
+    Column("article_id", Integer, ForeignKey("articles.id")),
+    Column("named_entity_id", Integer, ForeignKey("named_entities.id")),
+)
 
 
 class Article(Base):
@@ -31,6 +43,11 @@ class Article(Base):
     valid_to = Column(DateTime, nullable=True)
     paragraphs = relationship("ArticleParagraph", back_populates="article")
     summary = relationship("ArticleSummary", back_populates="article")
+    named_entites = relationship(
+        "NamedEntity",
+        secondary=article_named_entity_association_table,
+        back_populates="articles",
+    )
 
     __table_args__ = (
         CheckConstraint(
@@ -90,6 +107,18 @@ class Article(Base):
             )
             return None, new_article
 
+    @property
+    def full_text(self) -> str:
+        return "\n\n".join([p.paragraph_text for p in self.paragraphs])
+
+    def get_named_entities(self) -> List[str]:
+        nlp = spacy.load("en_core_web_sm")
+        doc = nlp(self.full_text)
+        entities = set(
+            [(ent.text, ent.label_) for ent in doc.ents if ent.label_ not in IGNORE]
+        )
+        return list(entities)
+
 
 class ArticleParagraph(Base):
     __tablename__ = "article_paragraphs"
@@ -133,3 +162,16 @@ class ArticleSummary(Base):
     summary_text = Column(String, nullable=False)
     article = relationship("Article", back_populates="summary")
     embedding = Column(Vector(1536))
+
+
+class NamedEntity(Base):
+    __tablename__ = "named_entities"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    entity_text = Column(String, nullable=False)
+    entity_type = Column(String, nullable=False)
+    articles = relationship(
+        "Article",
+        secondary=article_named_entity_association_table,
+        back_populates="named_entites",
+    )
