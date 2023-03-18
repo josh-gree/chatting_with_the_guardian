@@ -1,0 +1,26 @@
+name: named-entity-population
+
+on:
+  schedule:
+    - cron:  "0 */12 * * *"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v3
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install poetry
+        poetry install --with dev
+    - run: |
+        poetry run python -m spacy download en_core_web_sm
+    - run: |
+        poetry run python -m chatting_with_the_guardian.named_entity_population.main
+      env:
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
