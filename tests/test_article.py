@@ -44,7 +44,6 @@ def postgres_container():
     # Activate pgvector extension
     with engine.connect() as connection:
         connection.execute(text("CREATE EXTENSION IF NOT EXISTS vector SCHEMA public;"))
-        connection.commit()
 
     # Return connection string
     yield connection_string
@@ -71,6 +70,8 @@ def db_session(db_engine):
     savepoint = connection.begin_nested()
     Session = sessionmaker(bind=connection)
     session = Session()
+
+    session.execute(text("CREATE EXTENSION IF NOT EXISTS vector SCHEMA public;"))
 
     yield session
 
