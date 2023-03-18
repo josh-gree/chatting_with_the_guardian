@@ -46,7 +46,14 @@ def sleep(ctx):
     ctx.run("sleep 1")
 
 
-@task(local_pg_down, local_pg_up, sleep, local_run_migrations)
+@task
+def create_extension_vector(ctx):
+    ctx.run(
+        'echo "CREATE EXTENSION vector;" | pgcli postgresql://postgres:password@localhost:5432/postgres'
+    )
+
+
+@task(local_pg_down, local_pg_up, sleep, create_extension_vector, local_run_migrations)
 def local_reset(ctx):
     pass
 
