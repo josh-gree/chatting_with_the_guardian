@@ -35,6 +35,8 @@ def main():
         if ind % 1000 == 0:
             session.commit()
 
+    session.commit()
+
 
 if __name__ == "__main__":
     main()
