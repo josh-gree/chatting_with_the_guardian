@@ -76,3 +76,10 @@ def test(ctx):
 @task
 def run_migrations(ctx, prod, database_url):
     ctx.run(f"PROD={prod} DATABASE_URL={database_url} alembic upgrade head")
+
+
+@task
+def generate_migrations(ctx, prod, database_url, description):
+    ctx.run(
+        f"PROD={prod} DATABASE_URL={database_url} alembic revision --autogenerate -m '{description}'"
+    )
