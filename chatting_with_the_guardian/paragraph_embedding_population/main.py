@@ -24,11 +24,13 @@ def main():
 
     ps = session.query(ArticleParagraph).all()
 
-    p = ps[0]
+    N = len(ps)
+    for ind, p in enumerate(ps):
+        print(f"{ind}/{N}")
+        p_embed = get_bert_embedding(p.paragraph_text, model, tokenizer)
+        p.embedding = p_embed[0]
 
-    p_embed = get_bert_embedding(p.paragraph_text, model, tokenizer)
-
-    print(p_embed)
+    session.commit()
 
 
 if __name__ == "__main__":
