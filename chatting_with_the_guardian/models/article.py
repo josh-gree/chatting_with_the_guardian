@@ -128,7 +128,7 @@ class ArticleParagraph(Base):
     paragraph_text = Column(String, nullable=False)
     order = Column(Integer, nullable=False)
     article = relationship("Article", back_populates="paragraphs")
-    embedding = Column(Vector(1536))
+    embedding = Column(Vector(768))
 
     __table_args__ = (
         UniqueConstraint(
@@ -161,7 +161,7 @@ class ArticleSummary(Base):
     article_id = Column(Integer, ForeignKey("articles.id"), nullable=False)
     summary_text = Column(String, nullable=False)
     article = relationship("Article", back_populates="summary")
-    embedding = Column(Vector(1536))
+    embedding = Column(Vector(768))
 
 
 class NamedEntity(Base):
