@@ -32,7 +32,7 @@ def main():
         p_embed = get_bert_embedding(p.paragraph_text, model, tokenizer)
         p.embedding = p_embed[0]
 
-        if ind % 100 == 0:
+        if ind % 1000 == 0:
             session.commit()
 
 
