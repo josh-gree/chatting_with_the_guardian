@@ -1,6 +1,7 @@
 import pytest
 import docker
 
+from unittest.mock import patch
 from datetime import date, datetime, timedelta
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -179,6 +180,10 @@ def test_paragraph_unique_constraint(db_session):
         db_session.commit()
 
 
+@patch(
+    "chatting_with_the_guardian.models.article.upload_text_to_bucket",
+    new=lambda *args, **kwargs: ...,
+)
 def test_add_article_paragraphs(db_session):
     # create a test article
     article = Article(

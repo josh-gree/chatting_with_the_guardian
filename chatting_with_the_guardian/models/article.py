@@ -17,7 +17,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import declarative_base, relationship
 
-from chatting_with_the_guardian.utils import parse_url
+from chatting_with_the_guardian.utils import parse_url, upload_text_to_bucket
 
 Base = declarative_base()
 
@@ -146,8 +146,16 @@ class ArticleParagraph(Base):
         paragraphs = []
         for ind, p in enumerate(article_text.split("\n")):
             if p:
+                upload_text_to_bucket(
+                    text=p,
+                    bucket_name="chatting_with_the_guardian",
+                    blob_name=blob_uuid,
+                )
                 paragraph = ArticleParagraph(
-                    article_id=article.id, paragraph_text=p, order=ind
+                    article_id=article.id,
+                    paragraph_text=p,
+                    order=ind,
+                    blob_uuid=blob_uuid,
                 )
                 paragraphs.append(paragraph)
 

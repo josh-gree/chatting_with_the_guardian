@@ -2,6 +2,13 @@ import bs4
 import requests
 from datetime import datetime
 from urllib.parse import urlparse
+from boto3.session import Session
+
+from chatting_with_the_guardian.consts import (
+    ACCESS_ID,
+    SECRET_KEY,
+    DO_SPACES_ENDPOINT_URL,
+)
 
 ROOT_URL = "https://www.theguardian.com"
 
@@ -62,3 +69,15 @@ def get_article_text(url: str) -> str:
         return None
 
     return "\n".join(ps)
+
+
+def upload_text_to_bucket(text: str, bucket_name: str, blob_name: str):
+    session = Session()
+    client = session.client(
+        "s3",
+        endpoint_url=DO_SPACES_ENDPOINT_URL,
+        aws_access_key_id=ACCESS_ID,
+        aws_secret_access_key=SECRET_KEY,
+    )
+
+    client.put_object(Body=text, Bucket=bucket_name, Key=blob_name)
