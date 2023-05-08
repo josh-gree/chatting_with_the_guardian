@@ -168,11 +168,11 @@ def test_paragraph_unique_constraint(db_session):
     )
     db_session.add(article)
     paragraph_first = ArticleParagraph(
-        article=article, paragraph_text="some text", order=1
+        article=article, paragraph_text="some text", order=1, blob_uuid="some_uuid"
     )
     db_session.add(paragraph_first)
     paragraph_dupe = ArticleParagraph(
-        article=article, paragraph_text="some text", order=1
+        article=article, paragraph_text="some text", order=1, blob_uuid="some_uuid"
     )
     db_session.add(paragraph_dupe)
     with pytest.raises(Exception):
@@ -202,6 +202,11 @@ def test_add_article_paragraphs(db_session):
     assert len(db_session.query(ArticleParagraph).all()) == 2
 
     with pytest.raises(Exception):
-        ap = ArticleParagraph(article=article, paragraph_text="This is some", order=0)
+        ap = ArticleParagraph(
+            article=article,
+            paragraph_text=paragraphs[0].paragraph_text,
+            order=paragraphs[0].order,
+            blob_uuid=paragraphs[0].blob_uuid,
+        )
         db_session.add(ap)
         db_session.commit()
