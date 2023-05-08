@@ -24,3 +24,5 @@ jobs:
         poetry run python -m chatting_with_the_guardian.named_entity_population.main
       env:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        ACCESS_ID: ${{ secrets.ACCESS_ID }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
