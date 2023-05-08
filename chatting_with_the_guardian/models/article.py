@@ -1,5 +1,6 @@
 import hashlib
 import spacy
+import uuid
 from typing import List, Optional, Tuple
 from pgvector.sqlalchemy import Vector
 
@@ -126,6 +127,7 @@ class ArticleParagraph(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     article_id = Column(Integer, ForeignKey("articles.id"), nullable=False)
     paragraph_text = Column(String, nullable=False)
+    blob_uuid = Column(String)
     order = Column(Integer, nullable=False)
     article = relationship("Article", back_populates="paragraphs")
     embedding = Column(Vector(768))
@@ -135,6 +137,7 @@ class ArticleParagraph(Base):
             "paragraph_text",
             "order",
             "article_id",
+            "blob_uuid",
             name="uq_article_paragraphs_text_order",
         ),
     )
@@ -145,6 +148,7 @@ class ArticleParagraph(Base):
     ) -> List["ArticleParagraph"]:
         paragraphs = []
         for ind, p in enumerate(article_text.split("\n")):
+            blob_uuid = str(uuid.uuid4())
             if p:
                 upload_text_to_bucket(
                     text=p,
